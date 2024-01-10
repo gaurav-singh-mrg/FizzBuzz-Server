@@ -1,15 +1,23 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count
 from .models import RequestStat
-from rest_framework_swagger.views import get_swagger_view
 
-schema_view = get_swagger_view(title='Fizz-Buzz API Documentation')
+# schema_view = get_swagger_view(title='fizz_buzz')
+
 
 @api_view(['GET'])
 def fizz_buzz(request, int1, int2, limit, str1, str2):
+    """
+        Fizz-Buzz endpoint Input Field Description.\n
+        :param int1: Integer, multiples of which will be replaced with str1.\n
+        :param int2: Integer, multiples of which will be replaced with str2.\n
+        :param limit: Integer, defines the range of numbers (from 1 to limit) for the Fizz-Buzz logic.\n
+        :param str1: String, the replacement for multiples of int1.\n
+        :param str2: String, the replacement for multiples of int2.\n
+        :return: List of strings representing the Fizz-Buzz output.\n
+    """
     result = []
 
     for num in range(1, limit + 1):
@@ -25,11 +33,15 @@ def fizz_buzz(request, int1, int2, limit, str1, str2):
     RequestStat.objects.create(int1=int1, int2=int2, limit=limit, str1=str1, str2=str2)
 
     return Response(result)
-    # return JsonResponse(result)
 
 
 @api_view(['GET'])
 def statistics(request):
+    """
+        Statistics endpoint.\n
+        This endpoint does not require any parameters.\n
+        :return: JSON response containing statistics of the most used request.\n
+    """
     most_used_request = RequestStat.objects.values('int1', 'int2', 'limit', 'str1', 'str2').annotate(
         count=Count('id')).order_by('-count').first()
 
