@@ -16,11 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import fizz_buzz, statistics
+from .views import fizz_buzz, statistics, schema_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('fizzbuzz/<int:int1>/<int:int2>/<int:limit>/<str:str1>/<str:str2>',  fizz_buzz, name='fizz_buzz'),
     path('statistics/', statistics, name='statistics'),
+    path('docs/', schema_view),
 
 ]

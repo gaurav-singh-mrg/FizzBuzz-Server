@@ -4,7 +4,9 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Count
 from .models import RequestStat
+from rest_framework_swagger.views import get_swagger_view
 
+schema_view = get_swagger_view(title='Fizz-Buzz API Documentation')
 
 @api_view(['GET'])
 def fizz_buzz(request, int1, int2, limit, str1, str2):
@@ -23,6 +25,7 @@ def fizz_buzz(request, int1, int2, limit, str1, str2):
     RequestStat.objects.create(int1=int1, int2=int2, limit=limit, str1=str1, str2=str2)
 
     return Response(result)
+    # return JsonResponse(result)
 
 
 @api_view(['GET'])
@@ -39,7 +42,7 @@ def statistics(request):
             'str2': most_used_request['str2'],
             'count': most_used_request['count'],
         }
-        return Response(response_data)
-        # return JsonResponse(response_data)
+        # return Response(response_data)
+        return JsonResponse(response_data)
     else:
         return JsonResponse({'message': 'No statistics available'})
